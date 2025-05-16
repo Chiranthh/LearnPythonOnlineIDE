@@ -1,0 +1,123 @@
+body {
+    background-color: #121212;
+    color: #eee;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.editor-container {
+    position: relative;
+    font-family: monospace;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Highlighting (behind the textarea) */
+#highlighting {
+    position: absolute;
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    color: #eee;
+    background-color: #121212;
+    border: 1px solid #444;
+    z-index: 1;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 1rem;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.4;
+    overflow: auto;
+}
+
+/* Code editor textarea */
+#codeEditor {
+    position: relative;
+    background-color: transparent; /* Transparent to show highlighting behind */
+    color: #eee;                   /* Visible text color */
+    caret-color: #0af;
+    border: 1px solid #444;
+    z-index: 2;
+    resize: vertical;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow: auto;
+    /* Make sure the scrollbars align */
+    scrollbar-width: thin;
+    scrollbar-color: #555 #222;
+}
+
+/* Make sure scrolling is synced (optional) */
+/* You will need JS for syncing scroll positions */
+
+#userInput {
+    font-family: monospace;
+    min-height: 80px;
+    resize: vertical;
+    background-color: #1e1e1e;
+    color: #eee;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.terminal-output {
+    min-height: 150px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    background-color: #1e1e1e;
+    color: #eee;
+    border-radius: 5px;
+    resize: vertical;
+    padding: 0.75rem;
+    border: 1px solid #444;
+    font-size: 1rem;
+}
+
+.success-output {
+    background-color: #1e422f;
+    color: #a6e3a1;
+}
+
+.error-output {
+    background-color: #4e1e1e;
+    color: #f87171;
+}
+
+.btn-group > button {
+    min-width: 110px;
+}
+
+/* Scrollbars for code editor and output */
+#codeEditor::-webkit-scrollbar,
+#highlighting::-webkit-scrollbar,
+#outputArea::-webkit-scrollbar,
+#userInput::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#codeEditor::-webkit-scrollbar-thumb,
+#highlighting::-webkit-scrollbar-thumb,
+#outputArea::-webkit-scrollbar-thumb,
+#userInput::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+#codeEditor::-webkit-scrollbar-track,
+#highlighting::-webkit-scrollbar-track,
+#outputArea::-webkit-scrollbar-track,
+#userInput::-webkit-scrollbar-track {
+    background: #222;
+}

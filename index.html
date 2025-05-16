@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Python Code Editor</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Highlight.js CSS -->
+  <link
+    id="hljs-theme"
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+  />
+
+  <!-- FontAwesome -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      background-color: #121212;
+      color: #eee;
+    }
+
+    .editor-container {
+      position: relative;
+      font-family: monospace;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    #codeEditor, #highlighting {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 300px;
+      border-radius: 5px;
+      padding: 1rem;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: monospace;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    /* Visible textarea with solid dark background */
+    #codeEditor {
+      position: relative;
+      background-color: #121212;
+      color: #eee;
+      caret-color: #0af;
+      border: 1px solid #444;
+      z-index: 2;
+      resize: vertical;
+      outline: none;
+      /* Scrollbars */
+      scrollbar-width: thin;
+      scrollbar-color: #555 #222;
+    }
+    #codeEditor::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    #codeEditor::-webkit-scrollbar-thumb {
+      background: #555;
+      border-radius: 4px;
+    }
+    #codeEditor::-webkit-scrollbar-track {
+      background: #222;
+    }
+
+    /* Highlighting behind textarea, no pointer events */
+    #highlighting {
+      position: absolute;
+      top: 0; left: 0;
+      pointer-events: none;
+      color: #eee;
+      background-color: #121212;
+      border: 1px solid #444;
+      z-index: 1;
+      border-radius: 5px;
+      width: 100%;
+      min-height: 300px;
+      padding: 1rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #userInput {
+      font-family: monospace;
+      min-height: 80px;
+      resize: vertical;
+      background-color: #1e1e1e;
+      color: #eee;
+      border-radius: 5px;
+      border: 1px solid #444;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .terminal-output {
+      min-height: 150px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      background-color: #1e1e1e;
+      color: #eee;
+      border-radius: 5px;
+      resize: vertical;
+      border: 1px solid #444;
+      padding: 0.5rem;
+    }
+
+    .success-output {
+      background-color: #1e422f;
+      color: #a6e3a1;
+    }
+
+    .error-output {
+      background-color: #4e1e1e;
+      color: #f87171;
+    }
+
+    .btn-group > button {
+      min-width: 110px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-4">
+  <h1 class="mb-4 text-center">Python Code Editor</h1>
+
+  <div class="mb-3 editor-container">
+    <pre id="highlighting" aria-hidden="true"></pre>
+    <textarea id="codeEditor" spellcheck="false" aria-label="Code editor" placeholder="Write your Python code here..."></textarea>
+  </div>
+
+  <div class="btn-group mb-3" role="group" aria-label="Editor actions">
+    <button id="runCodeBtn" type="button" class="btn btn-primary">
+      <i class="fas fa-play me-2"></i>Run Code
+    </button>
+    <button id="clearOutputBtn" type="button" class="btn btn-secondary">
+      <i class="fas fa-eraser me-2"></i>Clear Output
+    </button>
+    <button id="toggleThemeBtn" type="button" class="btn btn-dark" title="Toggle Dark/Light Mode">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+  </div>
+
+  <label for="outputArea" class="form-label">Output:</label>
+  <textarea id="outputArea" class="terminal-output" readonly>Run your code to see the output!</textarea>
+</div>
+
+<!-- Bootstrap Bundle JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Highlight.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
+
+<script>
+  const codeEditor = document.getElementById('codeEditor');
+  const highlighting = document.getElementById('highlighting');
+
+  // Function to update highlighted code
+  function updateHighlighting() {
+    // Escape HTML special chars
+    let code = codeEditor.value.replace(/&/g, "&amp;")
+                               .replace(/</g, "&lt;")
+                               .replace(/>/g, "&gt;");
+    // Highlight with hljs
+    let highlighted = hljs.highlight(code, {language: 'python'}).value;
+    highlighting.innerHTML = highlighted + '<br />';  // Keep last line visible
+  }
+
+  // Sync scroll between textarea and highlighting
+  codeEditor.addEventListener('scroll', () => {
+    highlighting.scrollTop = codeEditor.scrollTop;
+    highlighting.scrollLeft = codeEditor.scrollLeft;
+  });
+
+  // Update highlighting on input
+  codeEditor.addEventListener('input', updateHighlighting);
+
+  // Initialize highlighting on page load
+  updateHighlighting();
+
+  // Example placeholder for buttons
+  document.getElementById('clearOutputBtn').onclick = () => {
+    document.getElementById('outputArea').value = '';
+  };
+
+  document.getElementById('runCodeBtn').onclick = async () => {
+    const outputArea = document.getElementById('outputArea');
+    const code = codeEditor.value;
+    
+    try {
+      outputArea.value = 'Running code...\n';
+      const response = await fetch('/run-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code, input: '' })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        outputArea.value = result.stdout;
+        outputArea.classList.remove('error-output');
+        outputArea.classList.add('success-output');
+      } else {
+        outputArea.value = `Error: ${result.stderr}`;
+        outputArea.classList.remove('success-output');
+        outputArea.classList.add('error-output');
+      }
+    } catch (error) {
+      outputArea.value = `Error: ${error.message}`;
+      outputArea.classList.remove('success-output');
+      outputArea.classList.add('error-output');
+    }
+  };
+
+  document.getElementById('toggleThemeBtn').onclick = () => {
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if(body.dataset.bsTheme === 'dark') {
+      body.dataset.bsTheme = 'light';
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+      document.getElementById('hljs-theme').href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css";
+    } else {
+      body.dataset.bsTheme = 'dark';
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+      document.getElementById('hljs-theme').href = "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css";
+    }
+    updateHighlighting();
+  };
+</script>
+
+</body>
+</html>
