@@ -16,13 +16,6 @@ Write, run, and test Python code directly in your browser — with full input/ou
 
 ---
 
-## 🌐 Live Demo
-
-> [Paste your live URL here after deployment]  
-> _Example: https://pythoncodepen.onrender.com_
-
----
-
 ## 🚀 Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript *(or React, if used)*
